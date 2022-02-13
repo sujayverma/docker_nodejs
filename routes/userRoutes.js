@@ -7,7 +7,9 @@ router.use(express.json());
 //localhost:3000/
 router
     .route('/')
-    .post(authController.signUp);
+    .post(authController.signUp).get(authController.showUser);
+router
+    .route('/login').post(authController.login)
 
     
 module.exports = router;

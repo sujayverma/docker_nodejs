@@ -1,26 +1,79 @@
 const User = require('../models/userModel');
 
+const bcrypt = require('bcryptjs');
 
-exports.signUp = async (res, req, next) => {
+exports.signUp = async (req, res, next) => {
+    const {username, password} = req.body;
+    // hashes the password with 12 CharacterData.
+    const hashPassword = await bcrypt.hash(password,12);
     try {
-        console.log(req); console.log('Hi');
-        res.json({
-            status: 200
+        const newUser = await User.create({
+            username,
+            password: hashPassword
         });
-        //const newUser = await User.create(req.body);
-        // res.status(200).json({
-        //     status: "Success",
-        //     data: {
-        //         newUser
-        //     }
-        // });
+        res.status(200).json({
+            status: "Success",
+            data: {
+                newUser
+            }
+        });
     } catch (e) {
-        res.json(e);
-        // res.status(400).json({
-        //     status: "Fail"
-        // });
-        console.log(e);
+        res.status(400).json({
+            status: "Fail"
+        });
     }
 
+}
 
+exports.showUser = async (req, res) => {
+    try {
+        const newUsers = await User.find()
+        res.status(200).json({
+            status: "Success",
+            result: newUsers.length,
+            data: {
+                newUsers
+            }
+        });
+    }
+    catch(e) {
+        res.status(400).json({
+            status: "Fail"
+        });
+    }
+}
+
+exports.login = async (req, res) => {
+    const {username, password} = req.body;
+    console.log('hi');
+    try {
+        const user = await User.findOne({username});
+        if(!user){
+             res.status(400).json({
+                status: "Username Doesn't Exists"
+            });
+        }
+
+        const isCorrect = await bcrypt.compare(password, user.password);
+        if(isCorrect) {
+            res.status(200).json({
+                status: "Success",
+                data: {
+                    user
+                }
+            });
+        }
+        else {
+            res.status(400).json({
+                status: "Fail",
+                
+            });
+        }
+    }
+    catch(e) {
+        console.log(e)
+        res.status(400).json({
+            status: "Fail"
+        });
+    }
 }
