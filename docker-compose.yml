@@ -17,12 +17,8 @@ services:
     volumes:
       - mongo-db:/data/db
   redis:
-    image: redis:latest 
-    restart: always
-    ports:
-      - '6379:6379'
-    expose:
-      - '6379'
+    image: redis
+    # command: ["redis", "--bind", "redis", "--port", "6379"]
 
 volumes:
   mongo-db:
