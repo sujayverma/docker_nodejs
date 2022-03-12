@@ -8,5 +8,6 @@ RUN if [ "$NODE_ENV" = "development" ]; \
          fi
 COPY . ./
 ENV PORT 3000
+ENV TZ=Asia/Kolkata
 EXPOSE $POST
 CMD ["node", "index.js"]

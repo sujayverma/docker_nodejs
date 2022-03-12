@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
+const cors = require('cors');
 const redis = require('redis');
 let RedisStore = require('connect-redis')(session);
  
@@ -41,7 +42,8 @@ const connectWithRetry = () => {
 };
 
 connectWithRetry();
-
+app.enable("trust proxy"); //This is usefull for prod environment when we make use client IP.
+app.use(cors({}));
 app.use(session({
     store: new RedisStore({client: redisClient}),
     secret: SESSION_SECRET,
@@ -57,8 +59,9 @@ app.use(session({
 app.use(express.json());
 
 
-app.get('/', (req, res) => {
-    res.send('<h2> Hell Yeah!!!</h2>')
+app.get('/api/v1', (req, res) => {
+    res.send('<h2> Hell Yeah!!!</h2>');
+    console.log('Hello Ladies ;)');
 });
 
 //localhost:3000/api/v1/posts/

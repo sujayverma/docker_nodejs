@@ -11,6 +11,7 @@ exports.signUp = async (req, res, next) => {
             username,
             password: hashPassword
         });
+        req.session.user = newUser;
         res.status(200).json({
             status: "Success",
             data: {
@@ -55,6 +56,7 @@ exports.login = async (req, res) => {
 
         const isCorrect = await bcrypt.compare(password, user.password);
         if(isCorrect) {
+            req.session.user = user; // this done to store user data in redis session.
             res.status(200).json({
                 status: "Success",
                 data: {
