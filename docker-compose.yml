@@ -7,7 +7,7 @@ services:
     depends_on:
       - node-app
   node-app:
-    build: .
+    build: .  #this will look into current dir for node image.
     environment:
       - PORT=3000
     depends_on:
